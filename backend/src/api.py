@@ -24,7 +24,13 @@ db_drop_and_create_all()
 '''
 @app.route('/drinks')
 def get_drinks():
-  return 'hello world'
+  drinks = Drink.query.order_by(Drink.id).all()
+  drinks_short = [drink.short() for drink in drinks]
+
+  return jsonify({
+    "success": True,
+    "drinks": drinks_short,
+  })
 
 
 '''
