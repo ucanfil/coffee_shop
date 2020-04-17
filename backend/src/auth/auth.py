@@ -35,22 +35,20 @@ def get_token_auth_header():
   return auth_header[1]
 
 
-'''
-@TODO implement check_permissions(permission, payload) method
-    @INPUTS
-        permission: string permission (i.e. 'post:drink')
-        payload: decoded jwt payload
-
-    it should raise an AuthError if permissions are not included in the payload
-        !!NOTE check your RBAC settings in Auth0
-    it should raise an AuthError if the requested permission string is not in the payload permissions array
-    return true otherwise
-'''
-
-
 def check_permissions(permission, payload):
-    raise Exception('Not Implemented')
+  if 'permissions' not in payload:
+    raise AuthError({
+      'code':'invalid_claims',
+      'description': 'Permissions not included in JWT.'
+    }, 400)
 
+  if permission not in payload['permissions']:
+    raise AuthError({
+      'code':'unauthorized',
+      'description': 'Permission not found.'
+    }, 403)
+
+  return True
 
 '''
 @TODO implement verify_decode_jwt(token) method
