@@ -22,7 +22,7 @@ def get_drinks():
     return jsonify({
         "success": True,
         "drinks": drinks_short,
-    })
+    }), 200
 
 
 @app.route('/drinks-detail')
@@ -34,7 +34,7 @@ def get_drink_details(payload):
     return jsonify({
         "success": True,
         "drinks": drinks_long,
-    })
+    }), 200
 
 
 @app.route('/drinks', methods=['POST'])
@@ -51,7 +51,7 @@ def create_drink(payload):
         return jsonify({
             "success": True,
             "drinks": [drink.long()],
-        })
+        }), 200
 
     except BaseException:
         abort(422)
@@ -74,7 +74,7 @@ def update_drink(payload, id):
         return jsonify({
             "success": True,
             "drinks": [drink.long()]
-        })
+        }), 200
     except BaseException:
         abort(404)
 
@@ -92,7 +92,7 @@ def delete_drink(payload, id):
         return jsonify({
             "success": True,
             "delete": id,
-        })
+        }), 200
     except BaseException:
         abort(404)
 
