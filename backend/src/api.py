@@ -79,16 +79,6 @@ def update_drink(payload, id):
     abort(404)
 
 
-'''
-@TODO implement endpoint
-    DELETE /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should delete the corresponding row for <id>
-        it should require the 'delete:drinks' permission
-    returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-        or appropriate status code indicating reason for failure
-'''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drink(payload, id):
@@ -108,35 +98,28 @@ def delete_drink(payload, id):
 
 
 ## Error Handling
-'''
-Example error handling for unprocessable entity
-'''
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False,
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
-
-'''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
-    each error handler should return (with approprate messages):
-             jsonify({
-                    "success": False,
-                    "error": 404,
-                    "message": "resource not found"
-                    }), 404
-
-'''
-
-'''
-@TODO implement error handler for 404
-    error handler should conform to general task above
-'''
+      "success": False,
+      "error": 422,
+      "message": "unprocessable"
+    }), 422
 
 
-'''
-@TODO implement error handler for AuthError
-    error handler should conform to general task above
-'''
+@app.errorhandler(404)
+def bad_request(error):
+  return jsonify({
+    "success": False,
+    "error": 404,
+    "message": "resource not found"
+  }), 404
+
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+  return jsonify({
+    "success": False,
+    "error": ex.error['code'],
+    "message": ex.error['description']
+  }), ex.status_code
